@@ -18,13 +18,12 @@ class ApiServiceProvider extends ServiceProvider
         $this->setupConfig();
 
         // Enable debugger when debug = true
-        if ($this->app['config']['app.debug'])
-        {
+        if ($this->app['config']['app.debug']) {
             $this->app->make(Debugger::class)->collectDatabaseQueries();
         }
 
-        if(!$this->isLumen()) {
-            $this->app->make('Illuminate\Contracts\Routing\ResponseFactory')->macro('api', function() {
+        if (!$this->isLumen()) {
+            $this->app->make('Illuminate\Contracts\Routing\ResponseFactory')->macro('api', function () {
                 return call_user_func_array([ApiResponse::class, 'create'], func_get_args());
             });
         }
