@@ -169,7 +169,7 @@ class ApiResponse extends JsonResponse
     /**
      * @inheritdoc
      */
-    public function setStatusCode($code, $text = null)
+    public function setStatusCode(int $code, $text = null)
     {
         parent::setStatusCode($code, $text);
 

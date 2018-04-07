@@ -21,8 +21,16 @@
 
 Установите этот пакет с помощью composer используя следующую команду:
 
+Для Laravel v5.6+
+
 ```bash
 composer require bwt-team/laravel-api
+```
+
+Для Laravel v5.5<
+
+```bash
+composer require bwt-team/laravel-api:1.0.*
 ```
 
 ### Настройка в Laravel
