@@ -78,7 +78,10 @@ class Debugger
     private function logQuery($query, $attributes, $time)
     {
         if (!empty($attributes)) {
-            $query = vsprintf(str_replace(['%', '?'], ['%%', "'%s'"], $query), $attributes) . ';';
+            $bindings = array_map(function ($item) {
+                return $item instanceof \DateTime ? $item->format('Y-m-d H:i:s') : $item;
+            }, $attributes);
+            $query = vsprintf(str_replace(['%', '?'], ['%%', "'%s'"], $query), $bindings) . ';';
         }
 
         $this->queries->push([
@@ -109,7 +112,7 @@ class Debugger
             $originalData = $response->getOriginalContent();
             $data = [];
 
-            if($originalData instanceof \Exception) {
+            if ($originalData instanceof \Exception) {
                 $data['exception'] = [
                     'message' => $originalData->getMessage(),
                     'code' => $originalData->getCode(),
