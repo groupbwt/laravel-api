@@ -21,15 +21,8 @@ This package allows to easily and quickly setup basics for API.
 
 Install this package with composer using the following command:
 
-For Laravel v5.6+
 ```bash
 composer require bwt-team/laravel-api
-```
-
-For Laravel v5.5<
-
-```bash
-composer require bwt-team/laravel-api:1.0.*
 ```
 
 ### Setup in Laravel
