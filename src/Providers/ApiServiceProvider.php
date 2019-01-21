@@ -18,7 +18,7 @@ class ApiServiceProvider extends ServiceProvider
         $this->setupConfig();
 
         // Enable debugger when debug = true
-        if ($this->app['config']['app.debug']) {
+        if ($this->app['config']['api.debug']) {
             $this->app->make(Debugger::class)->collectDatabaseQueries();
         }
 
