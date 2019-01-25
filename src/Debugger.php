@@ -50,6 +50,12 @@ class Debugger
         $this->event = $event;
         $this->connection = $connection;
 
+        $this->connection->listen(function ($event) {
+            if($this->collectQueries) {
+                $this->logQuery($event->sql, $event->bindings, $event->time);
+            }
+        });
+
         $this->event->listen(\Illuminate\Foundation\Http\Events\RequestHandled::class, function ($event) {
             $this->updateResponse($event->request, $event->response);
         });
@@ -58,14 +64,28 @@ class Debugger
     /**
      * Listen database queries events.
      */
-    public function collectDatabaseQueries()
+    public function enableCollectDatabaseQueries()
     {
         $this->collectQueries = true;
         $this->connection->enableQueryLog();
+    }
 
-        $this->connection->listen(function ($event) {
-            $this->logQuery($event->sql, $event->bindings, $event->time);
-        });
+    /**
+     * Disable listening database queries events.
+     */
+    public function disableCollectDatabaseQueries() {
+        $this->collectQueries = false;
+        $this->connection->disableQueryLog();
+    }
+
+    /**
+     * Remove all logs.
+     *
+     * @return void
+     */
+    public function flushLogs()
+    {
+        $this->queries = new Collection();
     }
 
     /**
