@@ -48,7 +48,7 @@ class Handler extends ExceptionHandler
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function render($request, Exception $e)
+    public function render($request, \Throwable $e)
     {
         if ($this->type == self::TYPE_API) {
             $e = $this->prepareException($e);
@@ -65,7 +65,7 @@ class Handler extends ExceptionHandler
      *
      * @return int
      */
-    protected function recognizeStatusCode(Exception $e)
+    protected function recognizeStatusCode(\Throwable $e)
     {
         if ($e instanceof HttpException) {
             return $e->getStatusCode();
