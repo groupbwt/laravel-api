@@ -2,6 +2,8 @@
 
 namespace BwtTeam\LaravelAPI\Response;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use JsonSerializable;
 use InvalidArgumentException;
 use Illuminate\Http\JsonResponse;
@@ -12,7 +14,6 @@ use BwtTeam\LaravelAPI\Processors\DataProcessor;
 use BwtTeam\LaravelAPI\Processors\MetaProcessor;
 use BwtTeam\LaravelAPI\Processors\StatusProcessor;
 use BwtTeam\LaravelAPI\Processors\OriginalDataProcessor;
-
 
 class ApiResponse extends JsonResponse
 {
@@ -111,17 +112,14 @@ class ApiResponse extends JsonResponse
     /**
      * {@inheritdoc}
      */
-    public function setEncodingOptions($encodingOptions)
+    public function setEncodingOptions($encodingOptions): static
     {
         $this->encodingOptions = (int)$encodingOptions;
 
         return $this->setData($this->getOriginalContent());
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function setData($data = [])
+    public function setData($data = []): static
     {
         $this->original = $data;
         $this->prepareMessage($data);
@@ -169,7 +167,7 @@ class ApiResponse extends JsonResponse
     /**
      * @inheritdoc
      */
-    public function setStatusCode(int $code, $text = null): object
+    public function setStatusCode(int $code, $text = null): static
     {
         parent::setStatusCode($code, $text);
 
@@ -197,7 +195,7 @@ class ApiResponse extends JsonResponse
     {
         $statusText = isset(self::$statusTexts[$this->getStatusCode()]) ? self::$statusTexts[$this->getStatusCode()] : 'unknown status';
 
-        return snake_case($statusText);
+        return Str::snake($statusText);
     }
 
     /**
@@ -347,7 +345,7 @@ class ApiResponse extends JsonResponse
      *
      * @return $this
      */
-    public function sendHeaders()
+    public function sendHeaders(): static
     {
         if ($this->isFixedStatusCode()) {
             $tmpStatusCode = $this->statusCode;
@@ -370,12 +368,12 @@ class ApiResponse extends JsonResponse
     /**
      * @return bool
      */
-    public function isFixedStatusCode()
+    public function isFixedStatusCode(): bool
     {
         $config = app('config')->get('api');
-        $always = array_get($config, 'status_code.fixed.always', false);
-        $byHeader = array_get($config, 'status_code.fixed.header', false) && \Request::header(array_get($config, 'status_code.fixed.header', false));
-        $byGetParam = array_get($config, 'status_code.fixed.get_param', false) && \Request::get(array_get($config, 'status_code.fixed.get_param', false));
+        $always = Arr::get($config, 'status_code.fixed.always', false);
+        $byHeader = Arr::get($config, 'status_code.fixed.header', false) && \Request::header(Arr::get($config, 'status_code.fixed.header', false));
+        $byGetParam = Arr::get($config, 'status_code.fixed.get_param', false) && \Request::get(Arr::get($config, 'status_code.fixed.get_param', false));
 
         return $always || $byHeader || $byGetParam;
     }
